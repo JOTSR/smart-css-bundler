@@ -1,5 +1,4 @@
-import { Plugin } from '$fresh/server.ts'
-import { fromFileUrl } from '$std/path/mod.ts'
+import { fromFileUrl, Plugin } from './deps.ts'
 import { bundleCss } from './src/bundler.ts'
 import { Logger } from './src/helpers.ts'
 import { cssHandler } from './src/middleware.ts'
