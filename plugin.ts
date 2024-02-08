@@ -5,21 +5,24 @@ import { cssHandler } from './src/middleware.ts'
 
 export function cssBundler(
 	sourceDir: string,
-	{ pattern = /main.css/, logLevel }: {
+	{ pattern = /main.css/, logLevel, disableMiddlewares = false }: {
 		pattern?: RegExp
 		logLevel?: 'disabled' | 'info' | 'error'
+		disableMiddlewares?: boolean
 	},
 ): Plugin {
 	const logger = new Logger({
 		logLevel: logLevel === 'info' ? 2 : logLevel === 'error' ? 1 : 0,
 	})
 
+	const middlewares = disableMiddlewares ? [] : [{
+		middleware: { handler: cssHandler(sourceDir, logger) },
+		path: '/',
+	}]
+
 	return {
 		name: 'css_bundler',
-		middlewares: [{
-			middleware: { handler: cssHandler(sourceDir, logger) },
-			path: '/',
-		}],
+		middlewares,
 		async buildStart(config) {
 			//Get fresh build directory
 			const { outDir } = config.build
