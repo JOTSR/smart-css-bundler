@@ -1,15 +1,13 @@
-import {
-	contentType,
-	ensureDir,
-	join,
-	MiddlewareHandler,
-	parse,
-} from '../deps.ts'
+import { ensureDir } from '@std/fs'
+import { join, parse } from '@std/path'
+import { contentType } from '@std/media-types'
+import { MiddlewareHandler } from 'fresh'
 import { bundleCss } from './bundler.ts'
 import { Logger } from './helpers.ts'
 
 export function cssHandler(
 	sourceDir: string,
+	cacheDir: string,
 	logger: Logger,
 ): MiddlewareHandler {
 	return async (_, ctx) => {
@@ -34,9 +32,9 @@ export function cssHandler(
 				if (!bundled.has(ctx.url.pathname)) {
 					bundled.add(ctx.url.pathname)
 					await bundleCss(
-						sourceDir,
-						assetDir,
-						ctx.url.pathname,
+						join(sourceDir, ctx.url.pathname),
+						join(assetDir, ctx.url.pathname),
+						cacheDir,
 						ctx.config.dev,
 						logger,
 					)
