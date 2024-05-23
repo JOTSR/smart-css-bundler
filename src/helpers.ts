@@ -28,18 +28,3 @@ export class Logger {
 		)
 	}
 }
-
-export async function hashFile(file: ArrayBuffer): Promise<string> {
-	const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', file))
-	return [...hash].map((value) => value.toString(16).padStart(2, '0')).join('')
-}
-
-export const cssImports: Map<string, string> = new Map()
-export const cssUrls: Map<string, string> = new Map()
-
-export function uInt8ArrayConcat(a: Uint8Array, b: Uint8Array) {
-	const dest = new Uint8Array(a.length + b.length)
-	dest.set(a)
-	dest.set(b, a.length)
-	return dest
-}
