@@ -1,114 +1,71 @@
-import { bundleAsync, join, parse, resolve, toFileUrl } from '../deps.ts'
-import { cssImports, cssUrls, Logger, uInt8ArrayConcat } from './helpers.ts'
+import { Logger } from './helpers.ts'
+import { ensureFile, exists } from 'jsr:@std/fs'
+import { fromFileUrl, join, toFileUrl } from 'jsr:@std/path'
+import { bundleAsync } from 'npm:lightningcss@1.25.0'
 
-export async function builder(
-	{ filename, dev, assetDir, remote, logger }: {
-		filename: string
-		dev: boolean
-		assetDir: string
-		remote?: string
-		logger: Logger
-	},
-) {
-	const { code, map } = await bundleAsync({
-		filename,
+export async function buildCss(
+	filename: string,
+	cacheDir: string,
+	dev: boolean,
+	logger: Logger,
+): Promise<string> {
+	const bundle = await bundleAsync({
+		filename: fromFileUrl(filename),
 		minify: true,
 		sourceMap: dev,
 		resolver: {
-			async read(pathOrUrl) {
-				if (pathOrUrl.startsWith('https%3A%2F%2F')) {
-					pathOrUrl = decodeURIComponent(pathOrUrl)
-				}
-				if (pathOrUrl.startsWith('https://')) {
-					//use cache for remote
-					if (cssImports.has(pathOrUrl)) {
-						logger.info('using cache for', `${pathOrUrl}`)
-						const filepath = cssImports.get(pathOrUrl)!
-						return Deno.readTextFile(filepath)
-					}
-
-					//update cache for new remote
-					logger.info('fetching and caching', `${pathOrUrl}`)
-					const response = await fetch(pathOrUrl)
-					const file = await response.arrayBuffer()
-					const filename = encodeURIComponent(pathOrUrl.toString())
-
-					const filepath = join(assetDir, `${filename}.css`)
-					await Deno.writeFile(filepath, new Uint8Array(file))
-
-					setTimeout(() => {}, 3_000)
-					const { code, map } = await builder({
-						filename: filepath,
-						dev,
-						assetDir,
-						remote: pathOrUrl,
-						logger,
-					})
-
-					if (map) {
-						const sourceMappingURL = new TextEncoder().encode(
-							`\n/*# sourceMappingURL=${filepath}.map.css */`,
-						)
-						await Deno.writeFile(
-							filepath,
-							uInt8ArrayConcat(code, sourceMappingURL),
-						)
-						await Deno.writeFile(`${filepath}.map.css`, map)
-					} else {
-						await Deno.writeFile(filepath, code)
-					}
-
-					cssImports.set(pathOrUrl, filepath)
-
-					return new TextDecoder().decode(file)
-				}
-				return Deno.readTextFile(pathOrUrl)
-			},
-			resolve(specifier, from) {
-				if (remote) {
-					const url = new URL(specifier, remote)
-					logger.info('resolve remote imports', url.toString())
-
-					return url.toString()
-				}
-
-				//resolve local files normally
-				if (!specifier.startsWith('https://') && !from.startsWith('https://')) {
-					logger.info('resolve local file', specifier)
-					return resolve(parse(from).dir, specifier)
-				}
-
-				//construct asset url
-				const baseUrl = from.startsWith('https://') ? from : toFileUrl(from)
+			async resolve(specifier, from) {
+				// Resolve local path or remote url
+				const basePath = import.meta.resolve(from)
+				const baseUrl = /^((https?)|(file)):\/\//.test(basePath)
+					? basePath
+					: toFileUrl(basePath)
 				const url = new URL(specifier, baseUrl)
-				logger.info('resolve remote file', url.toString())
 
-				return url.toString()
-			},
-		},
-		visitor: {
-			Url({ loc, url }) {
-				if (remote && !url.startsWith('data:')) {
-					cache(url, remote, assetDir)
+				// Return local path
+				if (url.protocol === 'file:') {
+					logger.info('resolving local file', filename)
+					console.assert(true) // Prevent lightning css from exiting event loop
+					return fromFileUrl(url.href)
 				}
-				return { loc, url }
+
+				// Compute cache path
+				const cachePath = join(cacheDir, url.hostname, url.pathname)
+
+				// Return already cached file
+				if (await exists(cachePath)) {
+					logger.info('resolving cached file', cachePath)
+					return cachePath
+				}
+
+				logger.info('resolving remote file', url.href)
+
+				try {
+					// Fetch remote url
+					const response = await fetch(url)
+					const css = await response.text()
+
+					// Cache remote url
+					await ensureFile(cachePath)
+					await Deno.writeTextFile(cachePath, css)
+					// await cacheFile(url, cachePath)
+
+					// Return cached file
+					return cachePath
+				} catch (error) {
+					logger.error(error)
+					throw new Error(`unable to fetch ${url.href}`, { cause: error })
+				}
 			},
 		},
 	})
 
-	return { code, map }
-}
+	const css = new TextDecoder().decode(bundle.code)
 
-async function cache(url: string, base: string, assetDir: string) {
-	const filepath = join(assetDir, url.split('?')[0])
-	const fullUrl = new URL(url, base)
-
-	if (cssUrls.has(fullUrl.pathname)) {
-		return
+	if (dev) {
+		const sourceMap = new TextDecoder().decode(bundle.map ?? new Uint8Array())
+		return `${css} /*# sourceMappingURL=${encodeURI(sourceMap)} */`
 	}
 
-	cssUrls.set(fullUrl.pathname, filepath)
-	const response = await fetch(fullUrl)
-	const file = await response.arrayBuffer()
-	await Deno.writeFile(filepath, new Uint8Array(file))
+	return css
 }

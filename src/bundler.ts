@@ -1,41 +1,31 @@
-import { fromFileUrl, join } from '../deps.ts'
-import { builder } from './builder.ts'
-import { cssImports, Logger, uInt8ArrayConcat } from './helpers.ts'
+import { buildCss } from './builder.ts'
+import { Logger } from './helpers.ts'
 
 export async function bundleCss(
-	sourceDir: string,
-	assetDir: string,
-	pathname: string,
+	sourcefile: string,
+	outfile: string,
+	cacheDir: string,
 	dev: boolean,
 	logger: Logger,
-) {
-	const filename = fromFileUrl(join(sourceDir, pathname))
-	logger.info('bundling', filename)
-
-	//prevent Deno from exiting before bundle
-	setTimeout(() => {}, 3_000)
+): Promise<void> {
+	logger.info(`bundling ${sourcefile} into ${outfile}`, sourcefile)
 
 	try {
-		const { code, map } = await builder({ filename, dev, assetDir, logger })
+		const css = await buildCss(sourcefile, cacheDir, dev, logger)
 
-		if (map) {
-			const sourceMappingURL = new TextEncoder().encode(
-				`\n/*# sourceMappingURL=${pathname.replace('.css', '.map.css')} */`,
+		try {
+			await Deno.writeTextFile(outfile, css)
+		} catch (error) {
+			logger.error(`error during writing bundle`, error)
+			throw new Error(
+				`error during writing bundle of ${sourcefile} into ${outfile}`,
+				{ cause: error },
 			)
-			await Deno.writeFile(
-				join(assetDir, pathname),
-				uInt8ArrayConcat(code, sourceMappingURL),
-			)
-
-			await Deno.writeFile(
-				join(assetDir, pathname.replace('.css', '.map.css')),
-				map,
-			)
-		} else {
-			await Deno.writeFile(join(assetDir, pathname), code)
 		}
 	} catch (error) {
-		logger.error('error during bundle, cleaning cache', error)
-		cssImports.clear()
+		logger.error('error during bundle', error)
+		throw new Error(`error during bundle ${sourcefile} into ${outfile}`, {
+			cause: error,
+		})
 	}
 }
