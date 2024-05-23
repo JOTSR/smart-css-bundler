@@ -10,7 +10,7 @@
 		"@std/media-types": "jsr:@std/media-types@^0.224.1",
 		"@std/path": "jsr:@std/path@^0.225.1",
 		"lightningcss": "npm:lightningcss@^1.25.0",
-		"fresh": "https://deno.land/x/fresh@1.6.5/server.ts"
+		"fresh": "https://deno.land/x/fresh@1.6.8/server.ts"
 	},
 	"exports": {
 		".": "./plugin.ts"
