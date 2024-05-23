@@ -31,20 +31,28 @@ export function cssHandler(
 					})
 				}
 
-				await bundleCss(
-					sourceDir,
-					assetDir,
-					ctx.url.pathname,
-					ctx.config.dev,
-					logger,
-				)
+				if (!bundled.has(ctx.url.pathname)) {
+					bundled.add(ctx.url.pathname)
+					await bundleCss(
+						sourceDir,
+						assetDir,
+						ctx.url.pathname,
+						ctx.config.dev,
+						logger,
+					)
+				}
 
-				const file = await Deno.readFile(filename)
-				return new Response(file, {
-					headers: {
-						'Content-Type': 'text/css; charset=utf-8',
-					},
-				})
+				try {
+					const file = await Deno.readFile(filename)
+					return new Response(file, {
+						headers: {
+							'Content-Type': 'text/css; charset=utf-8',
+						},
+					})
+				} catch (error) {
+					console.error(error)
+					return ctx.next()
+				}
 			}
 		}
 
@@ -69,3 +77,5 @@ export function cssHandler(
 		return resp
 	}
 }
+
+const bundled: Set<string> = new Set()
