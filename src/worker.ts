@@ -1,8 +1,10 @@
 /// <reference lib="webworker" />
 
-import { ensureDir } from '@std/fs'
+// import { ensureDir } from '@std/fs'
+import { ensureDir } from 'jsr:@std/fs@^0.229.1'
 import { Logger } from './helpers.ts'
-import { fromFileUrl } from '@std/path'
+// import { fromFileUrl } from '@std/path'
+import { fromFileUrl } from 'jsr:@std/path@^0.225.1'
 import { buildCss } from './builder.ts'
 import { cacheAssets } from './assets.ts'
 
@@ -29,12 +31,15 @@ self.addEventListener(
 	'message',
 	async (
 		event: MessageEvent<
-			{ sourceFile: string; cacheDir: string; dev: boolean; logger: Logger }
+			{ sourcefile: string; cacheDir: string; dev: boolean; logger: Logger }
 		>,
 	) => {
-		const { sourceFile, cacheDir, dev, logger } = event.data
+		const { sourcefile, cacheDir, dev } = event.data
+		
+		// Transfert logger from worker
+		const logger = new Logger(event.data.logger)
 
-		const result = await bundle(sourceFile, cacheDir, dev, logger)
+		const result = await bundle(sourcefile, cacheDir, dev, logger)
 
 		self.postMessage(result)
 	},

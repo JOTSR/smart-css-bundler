@@ -1,6 +1,6 @@
 import { Logger } from './helpers.ts'
-import { ensureFile, exists } from 'jsr:@std/fs'
-import { fromFileUrl, join, toFileUrl } from 'jsr:@std/path'
+import { ensureFile, exists } from 'jsr:@std/fs@^0.229.1'
+import { fromFileUrl, join, toFileUrl } from 'jsr:@std/path@^0.225.1'
 import { bundleAsync } from 'npm:lightningcss@1.25.0'
 
 export async function buildCss(

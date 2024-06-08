@@ -6,6 +6,10 @@ export class Logger {
 		this.#logLevel = logLevel
 	}
 
+	get logLevel() {
+		return this.#logLevel
+	}
+
 	info(message: string, path?: string) {
 		if (this.#logLevel < 2) return
 

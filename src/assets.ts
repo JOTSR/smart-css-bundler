@@ -1,6 +1,6 @@
-import { ensureFile, walk } from '@std/fs'
-import { fromFileUrl, relative, toFileUrl } from '@std/path'
-import { type Image, transform } from 'lightningcss'
+import { ensureFile, walk } from 'jsr:@std/fs@^0.229.1'
+import { fromFileUrl, relative, toFileUrl } from 'jsr:@std/path@^0.225.1'
+import { type Image, transform } from 'npm:lightningcss@^1.25.0'
 
 async function cacheFile(from: URL, to: string) {
 	// Fetch remote file

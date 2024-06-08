@@ -64,7 +64,7 @@ function bundleWorker(
 
 			revives++
 			worker = initBundleWorker()
-			worker.postMessage({ sourcefile, cacheDir })
+			worker.postMessage({ sourcefile, cacheDir, dev, logger })
 		}
 	}, 500)
 
