@@ -19,6 +19,9 @@ export type BundleOptions = {
 	/** Rename static assets with custom attributes. */
 	assetNaming?: (assetName: string) => string | Promise<string>
 
+	/** External path to exclude from bundler resolving. */
+	externalPaths?: string[]
+
 	/** Enable sourcemap and file watcher. */
 	dev: boolean
 	/** Set custom logger. */
@@ -65,6 +68,7 @@ async function bundleEntrypoint(
 		cacheDir,
 		assetDir,
 		assetNaming,
+		externalPaths,
 		dev = false,
 		logger,
 	}: BundleOptions,
@@ -79,5 +83,6 @@ async function bundleEntrypoint(
 		sourcemap: dev ? 'inline' : undefined,
 		outfile: await bundleNaming?.(outfile) ?? outfile,
 		plugins: [remoteResolver({ cacheDir, assetDir, assetNaming, dev, logger })],
+		external: externalPaths,
 	})
 }

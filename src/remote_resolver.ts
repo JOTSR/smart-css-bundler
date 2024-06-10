@@ -5,7 +5,10 @@ import { cacheAssetFile, cacheRemoteFile } from './caching.ts'
 import { getLoader } from './get_loader.ts'
 
 /** Bundler HTTP resolver options */
-type RemoteResolverOptions = Omit<BundleOptions, 'bundleDir' | 'bundleNaming'>
+type RemoteResolverOptions = Omit<
+	BundleOptions,
+	'bundleDir' | 'bundleNaming' | 'externalPaths'
+>
 
 /**
  * Esbuild plugin to resolve remote css and assets files.
