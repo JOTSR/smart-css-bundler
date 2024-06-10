@@ -1,8 +1,32 @@
-import type { Plugin } from 'fresh'
+// import type { Plugin } from 'fresh'
 import { bundle } from 'root'
 import { Logger } from 'utils'
 import { handler } from './middleware.ts'
 import { freshBuildDir } from './utils.ts'
+
+export type SimpleFreshContext = {
+	next(): Promise<Response>
+	config: {
+		build: { outDir: string }
+		dev: boolean
+	}
+}
+
+export type SimpleFreshMiddlewareHandler = (
+	request: Request,
+	ctx: SimpleFreshContext,
+) => Promise<Response>
+
+export type SimpleFreshPlugin = {
+	name: string
+	middlewares: {
+		middleware: {
+			handler: SimpleFreshMiddlewareHandler
+		}
+		path: string
+	}[]
+	buildStart: (config: SimpleFreshContext['config']) => Promise<void>
+}
 
 /**
  * Smart css bundler plugin for [deno/fresh](https://fresh.deno.dev).
@@ -20,7 +44,7 @@ export function cssBundler(
 			logLevel?: 'disabled' | 'debug' | 'info' | 'error'
 			disableMiddlewares?: boolean
 		},
-): Plugin {
+): SimpleFreshPlugin {
 	const logger = new Logger({
 		logLevel: logLevel === 'debug'
 			? 3

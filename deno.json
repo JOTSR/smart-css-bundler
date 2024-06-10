@@ -11,7 +11,6 @@
 		"@std/media-types": "jsr:@std/media-types@^0.224.1",
 		"@std/path": "jsr:@std/path@^0.225.1",
 		"esbuild": "npm:esbuild@^0.21.4",
-		"fresh": "https://deno.land/x/fresh@1.6.8/server.ts",
 		"root": "./mod.ts",
 		"utils": "./utils.ts"
 	},

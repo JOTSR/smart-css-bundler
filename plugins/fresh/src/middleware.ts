@@ -1,8 +1,9 @@
 import { contentType } from '@std/media-types'
 import { join, parse } from '@std/path'
-import type { MiddlewareHandler } from 'fresh'
+// import type { MiddlewareHandler } from 'fresh'
 import { bundle } from 'root'
 import type { Logger } from 'utils'
+import type { SimpleFreshMiddlewareHandler } from './plugin.ts'
 import { freshBuildDir } from './utils.ts'
 
 /**
@@ -23,7 +24,7 @@ export function handler({
 	assetNaming: (name: string) => string
 	externalPaths: string[]
 	logger: Logger
-}): MiddlewareHandler {
+}): SimpleFreshMiddlewareHandler {
 	let bundled = false
 
 	return async (request, ctx) => {
