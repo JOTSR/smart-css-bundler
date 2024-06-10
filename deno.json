@@ -12,6 +12,7 @@
 		"fresh": "https://deno.land/x/fresh@1.6.8/server.ts"
 	},
 	"exports": {
-		".": "./plugin.ts"
+		".": "./mod.ts",
+		"fresh": "./plugin.fresh.ts"
 	}
 }
