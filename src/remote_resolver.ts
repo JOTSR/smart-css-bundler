@@ -41,6 +41,12 @@ export function remoteResolver(
 						'watching local source file',
 						args.path,
 					)
+
+					// Mark assets as external paths
+					if (!args.path.endsWith('.css')) {
+						return { watchFiles: [args.path], external: true }
+					}
+
 					return { watchFiles: [args.path] }
 				}
 			})
