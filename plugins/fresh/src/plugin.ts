@@ -1,7 +1,7 @@
-import { Plugin } from 'fresh'
+import type { Plugin } from 'fresh'
+import { bundle } from 'root'
 import { Logger } from 'utils'
 import { handler } from './middleware.ts'
-import { bundle } from 'root'
 import { freshBuildDir } from './utils.ts'
 
 /**

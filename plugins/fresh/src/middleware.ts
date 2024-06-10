@@ -1,8 +1,8 @@
 import { contentType } from '@std/media-types'
 import { join, parse } from '@std/path'
-import { MiddlewareHandler } from 'fresh'
+import type { MiddlewareHandler } from 'fresh'
 import { bundle } from 'root'
-import { Logger } from 'utils'
+import type { Logger } from 'utils'
 import { freshBuildDir } from './utils.ts'
 
 /**

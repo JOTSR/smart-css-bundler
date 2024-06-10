@@ -1,7 +1,7 @@
 import { ensureDir } from '@std/fs'
 import { join, parse } from '@std/path'
 import { context } from 'esbuild'
-import { Logger } from '../utils.ts'
+import type { Logger } from 'utils'
 import { remoteResolver } from './remote_resolver.ts'
 
 /** Bundler options */

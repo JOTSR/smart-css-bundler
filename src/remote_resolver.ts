@@ -1,6 +1,6 @@
-import { OnResolveArgs, OnResolveResult, type PluginBuild } from 'esbuild'
-import { cachePathToRemoteUrl } from '../utils.ts'
-import { BundleOptions } from './bundle.ts'
+import type { OnResolveArgs, OnResolveResult, PluginBuild } from 'esbuild'
+import { cachePathToRemoteUrl } from 'utils'
+import type { BundleOptions } from './bundle.ts'
 import { cacheAssetFile, cacheRemoteFile } from './caching.ts'
 import { getLoader } from './get_loader.ts'
 
