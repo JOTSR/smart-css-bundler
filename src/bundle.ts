@@ -86,7 +86,12 @@ async function bundleEntrypoint(
 		external: externalPaths,
 	})
 
-	await ctx.watch()
+	if (dev) {
+		await ctx.watch()
+	} else {
+		await ctx.rebuild()
+		await ctx.dispose()
+	}
 
 	return ctx
 }
