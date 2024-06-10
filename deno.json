@@ -17,6 +17,6 @@
 	},
 	"exports": {
 		".": "./mod.ts",
-		"fresh": "./plugins/fresh/mod.ts"
+		"./fresh": "./plugins/fresh/mod.ts"
 	}
 }
