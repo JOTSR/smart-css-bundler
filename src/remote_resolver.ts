@@ -77,7 +77,7 @@ export function remoteResolver(
 					// Resolve remote asset
 					const response = await fetch(url)
 					const assetFilePath = await cacheAssetFile(assetDir, response)
-					const loader = getLoader(url.pathname)
+					const loader = getLoader(url.pathname, response)
 					const assetFile = await assetNaming?.(assetFilePath) ?? assetFilePath
 
 					return {
