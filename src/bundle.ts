@@ -38,7 +38,7 @@ export type BundleOptions = {
 export async function bundle(
 	entryPoints: string[],
 	{ bundleDir, cacheDir, assetDir, ...options }: BundleOptions,
-) {
+): Promise<unknown[]> {
 	// Ensure outputs directories
 	await ensureDir(bundleDir)
 	await ensureDir(cacheDir)
