@@ -47,9 +47,10 @@ export async function cacheRemoteFile(
  */
 async function cacheFile(filepath: string, response: Response): Promise<void> {
 	const etag = response.headers.get('etag')
+	const itemName = `css-remote-resolver-cache-state-key__${filepath}`
 
 	// Shortcut unchanged cached files
-	if (sessionStorage.getItem(filepath) === etag) {
+	if (sessionStorage.getItem(itemName) === etag) {
 		// Check if file not removed
 		if (await exists(filepath)) {
 			return
@@ -58,7 +59,7 @@ async function cacheFile(filepath: string, response: Response): Promise<void> {
 
 	// Update "fs cache" cache state
 	if (etag) {
-		sessionStorage.setItem(filepath, etag)
+		sessionStorage.setItem(itemName, etag)
 	}
 
 	const cacheParentDir = parse(filepath).dir
