@@ -1,5 +1,6 @@
 {
 	"name": "@jotsr/smart-css-bundler",
+	"version": "0.1.0",
 	"fmt": {
 		"singleQuote": true,
 		"semiColons": false,
