@@ -5,10 +5,21 @@ import { resolve } from '@std/path'
  */
 export class Logger {
 	readonly #name = 'smart_css_bundler'
-	#logLevel: 0 | 1 | 2
+	#logLevel: 0 | 1 | 2 | 3
 
-	constructor({ logLevel }: { logLevel: 0 | 1 | 2 }) {
+	constructor({ logLevel }: { logLevel: 0 | 1 | 2 | 3 }) {
 		this.#logLevel = logLevel
+	}
+
+	debug(message: string, path?: string) {
+		if (this.#logLevel < 3) return
+
+		console.log(
+			`%c[${this.#name}]%c ${message} %c${path ?? ''}`,
+			'color: indigo; font-weight: bold',
+			'',
+			'color: green',
+		)
 	}
 
 	info(message: string, path?: string) {

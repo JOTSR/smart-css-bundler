@@ -20,6 +20,7 @@ export function remoteResolver(
 	options: RemoteResolverOptions,
 ) {
 	const { dev, logger } = options
+	logger?.info('resolving files')
 
 	return {
 		name: 'css-remote-resolver',
@@ -37,7 +38,7 @@ export function remoteResolver(
 
 				// Watching local files
 				if (dev) {
-					logger?.info(
+					logger?.debug(
 						'watching local source file',
 						args.path,
 					)
@@ -53,7 +54,7 @@ export function remoteResolver(
 
 			// Load cache files (css)
 			build.onLoad({ filter: /.*/, namespace: 'remote' }, async (args) => {
-				logger?.info('loading cached file', args.path)
+				logger?.debug('loading cached file', args.path)
 				const contents = await Deno.readFile(args.path)
 				return { contents, loader: args.pluginData.loader }
 			})
@@ -72,7 +73,7 @@ async function resolveAbsoluteRemote(
 	{ cacheDir, assetDir, assetNaming, logger }: RemoteResolverOptions,
 	{ path }: OnResolveArgs,
 ): Promise<OnResolveResult> {
-	logger?.info('resolving absolute remote file', path)
+	logger?.debug('resolving absolute remote file', path)
 
 	// Get remote file
 	const response = await fetch(path)
@@ -126,7 +127,7 @@ async function resolveRelativeRemote(
 		const importerUrl = cachePathToRemoteUrl(cacheDir, args.importer)
 		const url = new URL(args.path, importerUrl)
 
-		logger?.info(
+		logger?.debug(
 			`resolving relative remote asset from (${importerUrl.href})`,
 			args.path,
 		)

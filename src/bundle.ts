@@ -87,8 +87,10 @@ async function bundleEntrypoint(
 	})
 
 	if (dev) {
+		logger?.info('bundling css in dev mode (watching for changes)', entryPoint)
 		await ctx.watch()
 	} else {
+		logger?.info('bundling css', entryPoint)
 		await ctx.rebuild()
 		await ctx.dispose()
 	}
