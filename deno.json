@@ -1,5 +1,5 @@
 {
-	"name": "@jotsr/fresh-css-bundler",
+	"name": "@jotsr/smart-css-bundler",
 	"fmt": {
 		"singleQuote": true,
 		"semiColons": false,
