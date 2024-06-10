@@ -1,5 +1,5 @@
+import { ensureDir, exists } from '@std/fs'
 import { join, parse } from '@std/path'
-import { ensureDir } from '@std/fs'
 
 /**
  * Cache an asset and return it's base path.
@@ -46,6 +46,21 @@ export async function cacheRemoteFile(
  * @param response Fetched source response
  */
 async function cacheFile(filepath: string, response: Response): Promise<void> {
+	const etag = response.headers.get('etag')
+
+	// Shortcut unchanged cached files
+	if (sessionStorage.getItem(filepath) === etag) {
+		// Check if file not removed
+		if (await exists(filepath)) {
+			return
+		}
+	}
+
+	// Update "fs cache" cache state
+	if (etag) {
+		sessionStorage.setItem(filepath, etag)
+	}
+
 	const cacheParentDir = parse(filepath).dir
 
 	await ensureDir(cacheParentDir)
