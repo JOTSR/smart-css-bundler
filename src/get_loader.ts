@@ -15,7 +15,7 @@ export function getLoader(
 		return 'css'
 	}
 
-	const pathname = new URL(filepath).pathname
+	const pathname = new URL(filepath, 'file://').pathname
 	const { ext } = parse(pathname)
 	if (ext === '.css') {
 		return 'css'
