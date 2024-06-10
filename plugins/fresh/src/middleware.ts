@@ -1,9 +1,9 @@
-import { bundle } from 'root'
-import { freshBuildDir } from './utils.ts'
-import { MiddlewareHandler } from 'fresh'
-import { Logger } from 'utils'
+import { contentType } from '@std/media-types'
 import { join, parse } from '@std/path'
-import { contentType } from 'jsr:@std/media-types'
+import { MiddlewareHandler } from 'fresh'
+import { bundle } from 'root'
+import { Logger } from 'utils'
+import { freshBuildDir } from './utils.ts'
 
 /**
  * Fresh middleware to bundle css sources files.
