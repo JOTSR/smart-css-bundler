@@ -9,10 +9,12 @@
 		"@std/fs": "jsr:@std/fs@^0.229.1",
 		"@std/path": "jsr:@std/path@^0.225.1",
 		"esbuild": "npm:esbuild@^0.21.4",
-		"fresh": "https://deno.land/x/fresh@1.6.8/server.ts"
+		"fresh": "https://deno.land/x/fresh@1.6.8/server.ts",
+		"utils": "./utils.ts",
+		"root": "./mod.ts"
 	},
 	"exports": {
 		".": "./mod.ts",
-		"fresh": "./plugin.fresh.ts"
+		"fresh": "./plugins/fresh/mod.ts"
 	}
 }
