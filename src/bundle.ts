@@ -1,6 +1,6 @@
 import { ensureDir } from '@std/fs'
 import { join, parse } from '@std/path'
-import { build } from 'esbuild'
+import { context } from 'esbuild'
 import { Logger } from '../utils.ts'
 import { remoteResolver } from './remote_resolver.ts'
 
@@ -76,7 +76,7 @@ async function bundleEntrypoint(
 	const { base } = parse(entryPoint)
 	const outfile = join(bundleDir, base)
 
-	return build({
+	const ctx = await context({
 		entryPoints: [entryPoint],
 		minify: true,
 		bundle: true,
@@ -85,4 +85,8 @@ async function bundleEntrypoint(
 		plugins: [remoteResolver({ cacheDir, assetDir, assetNaming, dev, logger })],
 		external: externalPaths,
 	})
+
+	await ctx.watch()
+
+	return ctx
 }
