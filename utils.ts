@@ -4,7 +4,7 @@ import { resolve } from '@std/path'
  * Custom plugin logger.
  */
 export class Logger {
-	readonly #name = 'bundle_css'
+	readonly #name = 'smart_css_bundler'
 	#logLevel: 0 | 1 | 2
 
 	constructor({ logLevel }: { logLevel: 0 | 1 | 2 }) {
