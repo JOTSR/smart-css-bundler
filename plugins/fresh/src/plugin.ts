@@ -39,7 +39,7 @@ export type SimpleFreshPlugin = {
 export function cssBundler(
 	entryPoints: string[],
 	{
-		cacheDir,
+		cacheDir = undefined,
 		externalPaths = [],
 		logLevel = 'info',
 		disableMiddlewares = false,

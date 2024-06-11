@@ -14,7 +14,7 @@ import { freshBuildDir } from './utils.ts'
  */
 export function handler({
 	entryPoints,
-	cacheDir,
+	cacheDir = undefined,
 	assetNaming,
 	externalPaths,
 	logger,
