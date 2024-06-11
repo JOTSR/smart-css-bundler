@@ -40,6 +40,7 @@ export function cssBundler(
 	entryPoints: string[],
 	options: {
 		cacheDir?: string
+		bundleSubDir?: string
 		externalPaths?: string[]
 		logLevel?: 'disabled' | 'debug' | 'info' | 'error'
 		disableMiddlewares?: boolean
@@ -47,6 +48,7 @@ export function cssBundler(
 ): SimpleFreshPlugin {
 	const {
 		cacheDir = undefined,
+		bundleSubDir = '/',
 		externalPaths = [],
 		logLevel = 'info',
 		disableMiddlewares = false,
@@ -69,6 +71,7 @@ export function cssBundler(
 			handler: handler({
 				entryPoints,
 				cacheDir,
+				bundleSubDir,
 				assetNaming,
 				externalPaths,
 				logger,
@@ -82,8 +85,8 @@ export function cssBundler(
 		middlewares,
 		async buildStart(config) {
 			await bundle(entryPoints, {
-				bundleDir: freshBuildDir(config.build),
-				assetDir: freshBuildDir(config.build),
+				bundleDir: freshBuildDir(config.build, bundleSubDir),
+				assetDir: freshBuildDir(config.build, bundleSubDir),
 				assetNaming,
 				cacheDir: cacheDir ?? join(config.build.outDir, './cache/css/'),
 				externalPaths,

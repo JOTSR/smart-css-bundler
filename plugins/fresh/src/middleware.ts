@@ -15,12 +15,14 @@ import { freshBuildDir } from './utils.ts'
 export function handler({
 	entryPoints,
 	cacheDir = undefined,
+	bundleSubDir,
 	assetNaming,
 	externalPaths,
 	logger,
 }: {
 	entryPoints: string[]
 	cacheDir?: string
+	bundleSubDir: string
 	assetNaming: (name: string) => string
 	externalPaths: string[]
 	logger: Logger
@@ -33,7 +35,7 @@ export function handler({
 			return ctx.next()
 		}
 
-		const outDir = freshBuildDir(ctx.config.build)
+		const outDir = freshBuildDir(ctx.config.build, bundleSubDir)
 
 		// Start bundle only once time in watch mode
 		if (!bundled) {
