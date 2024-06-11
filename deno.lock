@@ -5,6 +5,7 @@
       "jsr:@std/assert@^0.225.2": "jsr:@std/assert@0.225.3",
       "jsr:@std/assert@^0.226.0": "jsr:@std/assert@0.226.0",
       "jsr:@std/fs@^0.229.1": "jsr:@std/fs@0.229.1",
+      "jsr:@std/media-types@^0.224.1": "jsr:@std/media-types@0.224.1",
       "jsr:@std/path@^0.225.1": "jsr:@std/path@0.225.2",
       "npm:esbuild@^0.21.4": "npm:esbuild@0.21.4"
     },
@@ -21,6 +22,9 @@
           "jsr:@std/assert@^0.225.2",
           "jsr:@std/path@^0.225.1"
         ]
+      },
+      "@std/media-types@0.224.1": {
+        "integrity": "9e69a5daed37c5b5c6d3ce4731dc191f80e67f79bed392b0957d1d03b87f11e1"
       },
       "@std/path@0.225.2": {
         "integrity": "0f2db41d36b50ef048dcb0399aac720a5348638dd3cb5bf80685bf2a745aa506",
@@ -156,6 +160,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/fs@^0.229.1",
+      "jsr:@std/media-types@^0.224.1",
       "jsr:@std/path@^0.225.1",
       "npm:esbuild@^0.21.4"
     ]

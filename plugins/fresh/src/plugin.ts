@@ -38,18 +38,20 @@ export type SimpleFreshPlugin = {
  */
 export function cssBundler(
 	entryPoints: string[],
-	{
-		cacheDir = undefined,
-		externalPaths = [],
-		logLevel = 'info',
-		disableMiddlewares = false,
-	}: {
+	options: {
 		cacheDir?: string
 		externalPaths?: string[]
 		logLevel?: 'disabled' | 'debug' | 'info' | 'error'
 		disableMiddlewares?: boolean
-	},
+	} = {},
 ): SimpleFreshPlugin {
+	const {
+		cacheDir = undefined,
+		externalPaths = [],
+		logLevel = 'info',
+		disableMiddlewares = false,
+	} = options
+
 	const logger = new Logger({
 		logLevel: logLevel === 'debug'
 			? 3
