@@ -3,6 +3,7 @@ import { bundle } from 'root'
 import { Logger } from 'utils'
 import { handler } from './middleware.ts'
 import { freshBuildDir } from './utils.ts'
+import { join } from '@std/path'
 
 export type SimpleFreshContext = {
 	next(): Promise<Response>
@@ -37,13 +38,17 @@ export type SimpleFreshPlugin = {
  */
 export function cssBundler(
 	entryPoints: string[],
-	{ cacheDir = './cache', externalPaths, logLevel, disableMiddlewares = false }:
-		{
-			cacheDir: string
-			externalPaths: string[]
-			logLevel?: 'disabled' | 'debug' | 'info' | 'error'
-			disableMiddlewares?: boolean
-		},
+	{
+		cacheDir,
+		externalPaths = [],
+		logLevel = 'info',
+		disableMiddlewares = false,
+	}: {
+		cacheDir?: string
+		externalPaths?: string[]
+		logLevel?: 'disabled' | 'debug' | 'info' | 'error'
+		disableMiddlewares?: boolean
+	},
 ): SimpleFreshPlugin {
 	const logger = new Logger({
 		logLevel: logLevel === 'debug'
@@ -78,7 +83,7 @@ export function cssBundler(
 				bundleDir: freshBuildDir(config.build),
 				assetDir: freshBuildDir(config.build),
 				assetNaming,
-				cacheDir: cacheDir,
+				cacheDir: cacheDir ?? join(config.build.outDir, './cache/css/'),
 				externalPaths,
 				dev: config.dev,
 				logger: logger,

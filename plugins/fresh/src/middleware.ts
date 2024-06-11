@@ -20,7 +20,7 @@ export function handler({
 	logger,
 }: {
 	entryPoints: string[]
-	cacheDir: string
+	cacheDir?: string
 	assetNaming: (name: string) => string
 	externalPaths: string[]
 	logger: Logger
@@ -41,7 +41,7 @@ export function handler({
 				bundleDir: outDir,
 				assetDir: outDir,
 				assetNaming,
-				cacheDir: cacheDir,
+				cacheDir: cacheDir ?? join(ctx.config.build.outDir, './cache/css/'),
 				externalPaths,
 				dev: ctx.config.dev,
 				logger: logger,
